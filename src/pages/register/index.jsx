@@ -1,19 +1,17 @@
 import React,{useState} from 'react';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Footer from '../../components/footer-admin'
 import Api from '../../services/api';
+import CustomizedDialogs from '../modal/termo';
 
 
 
@@ -24,10 +22,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
+ 
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
@@ -49,7 +44,8 @@ export default function SignUp() {
   const [crm, setCrm] = useState('');
   const [cpf, setCpf] = useState('');
   const [phone, setPhone] = useState('');
-  
+  const [check, setCheck] = useState([]);
+
   async function handleSumbmit(){
     const data = {
       name:name,
@@ -57,23 +53,23 @@ export default function SignUp() {
       password:password,
       crm:crm,
       cpf:cpf,
-      phone:phone
+      phone:phone,
+      check:true,
     }
+    
     const response = await	Api.post('doctorSignUp', data);
       if(response.status === 201){
         window.location.href='/'
       }else{
         alert('Erro ao cadastrar o usuário!');
       }
-    console.log(data);
+   
   }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+        
         <Typography component="h1" variant="h5">
           Cadastro
         </Typography>
@@ -169,18 +165,29 @@ export default function SignUp() {
                 autoComplete="current-password"
                 value={password}
                 onChange={e =>setPassword(e.target.value)}
-              />
+                
+            />
+              
+              <Grid container justify="flex-start">
+
             </Grid>
-            <Grid container justify="flex-start">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Ler os Termos
-              </Link>
-            </Grid>
+            
           </Grid>
+          <Grid item xs={12}>
+          <CustomizedDialogs/>
+          </Grid>
+          
             <Grid item xs={12}>
+            
               <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
+                control={
+                <Checkbox  color="primary" 
+                  value = "ok"
+                  onChange={e =>setCheck(e.target.value)}
+            
+                />
+                  
+              }
                 
                 label="Concordar com os termos"
               />
